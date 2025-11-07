@@ -1,5 +1,6 @@
 import os
 import time
+import logging
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import MySQLdb
@@ -10,6 +11,10 @@ CORS(app)
 
 # Development mode flag
 DEBUG_MODE = os.getenv('FLASK_ENV') == 'development'
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Database configuration
 DB_CONFIG = {
@@ -96,6 +101,7 @@ def get_items():
         
         return jsonify(items_list), 200
     except Exception as e:
+        logger.error(f'Failed to retrieve items: {str(e)}')
         error_msg = str(e) if DEBUG_MODE else 'Failed to retrieve items'
         return jsonify({'error': error_msg}), 500
 
@@ -129,6 +135,7 @@ def create_item():
             'message': 'Item created successfully'
         }), 201
     except Exception as e:
+        logger.error(f'Failed to create item: {str(e)}')
         error_msg = str(e) if DEBUG_MODE else 'Failed to create item'
         return jsonify({'error': error_msg}), 500
 
@@ -156,6 +163,7 @@ def get_item(item_id):
         else:
             return jsonify({'error': 'Item not found'}), 404
     except Exception as e:
+        logger.error(f'Failed to retrieve item: {str(e)}')
         error_msg = str(e) if DEBUG_MODE else 'Failed to retrieve item'
         return jsonify({'error': error_msg}), 500
 
@@ -199,6 +207,7 @@ def update_item(item_id):
         else:
             return jsonify({'error': 'Item not found'}), 404
     except Exception as e:
+        logger.error(f'Failed to update item: {str(e)}')
         error_msg = str(e) if DEBUG_MODE else 'Failed to update item'
         return jsonify({'error': error_msg}), 500
 
@@ -219,6 +228,7 @@ def delete_item(item_id):
         else:
             return jsonify({'error': 'Item not found'}), 404
     except Exception as e:
+        logger.error(f'Failed to delete item: {str(e)}')
         error_msg = str(e) if DEBUG_MODE else 'Failed to delete item'
         return jsonify({'error': error_msg}), 500
 
