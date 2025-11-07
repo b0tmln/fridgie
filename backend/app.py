@@ -8,6 +8,9 @@ from MySQLdb import Error
 app = Flask(__name__)
 CORS(app)
 
+# Development mode flag
+DEBUG_MODE = os.getenv('FLASK_ENV') == 'development'
+
 # Database configuration
 DB_CONFIG = {
     'host': os.getenv('DATABASE_HOST', 'db'),
@@ -61,11 +64,14 @@ def health():
             'database': 'connected'
         }), 200
     except Exception as e:
-        return jsonify({
+        error_response = {
             'status': 'unhealthy',
-            'database': 'disconnected',
-            'error': str(e)
-        }), 503
+            'database': 'disconnected'
+        }
+        # Only expose detailed errors in development mode
+        if DEBUG_MODE:
+            error_response['error'] = str(e)
+        return jsonify(error_response), 503
 
 @app.route('/api/items', methods=['GET'])
 def get_items():
@@ -90,7 +96,8 @@ def get_items():
         
         return jsonify(items_list), 200
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        error_msg = str(e) if DEBUG_MODE else 'Failed to retrieve items'
+        return jsonify({'error': error_msg}), 500
 
 @app.route('/api/items', methods=['POST'])
 def create_item():
@@ -122,7 +129,8 @@ def create_item():
             'message': 'Item created successfully'
         }), 201
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        error_msg = str(e) if DEBUG_MODE else 'Failed to create item'
+        return jsonify({'error': error_msg}), 500
 
 @app.route('/api/items/<int:item_id>', methods=['GET'])
 def get_item(item_id):
@@ -148,7 +156,8 @@ def get_item(item_id):
         else:
             return jsonify({'error': 'Item not found'}), 404
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        error_msg = str(e) if DEBUG_MODE else 'Failed to retrieve item'
+        return jsonify({'error': error_msg}), 500
 
 @app.route('/api/items/<int:item_id>', methods=['PUT'])
 def update_item(item_id):
@@ -190,7 +199,8 @@ def update_item(item_id):
         else:
             return jsonify({'error': 'Item not found'}), 404
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        error_msg = str(e) if DEBUG_MODE else 'Failed to update item'
+        return jsonify({'error': error_msg}), 500
 
 @app.route('/api/items/<int:item_id>', methods=['DELETE'])
 def delete_item(item_id):
@@ -209,7 +219,11 @@ def delete_item(item_id):
         else:
             return jsonify({'error': 'Item not found'}), 404
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        error_msg = str(e) if DEBUG_MODE else 'Failed to delete item'
+        return jsonify({'error': error_msg}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Use DEBUG_MODE flag to control debug mode
+    # WARNING: Debug mode should never be enabled in production as it allows
+    # arbitrary code execution through the debugger
+    app.run(host='0.0.0.0', port=5000, debug=DEBUG_MODE)
