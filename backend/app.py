@@ -162,23 +162,22 @@ def update_item(item_id):
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        # Build update query dynamically
+        # Build update query with whitelisted fields
+        allowed_fields = {'name': 'name = %s', 'quantity': 'quantity = %s'}
         updates = []
         params = []
         
-        if 'name' in data:
-            updates.append('name = %s')
-            params.append(data['name'])
-        
-        if 'quantity' in data:
-            updates.append('quantity = %s')
-            params.append(data['quantity'])
+        for field, sql_fragment in allowed_fields.items():
+            if field in data:
+                updates.append(sql_fragment)
+                params.append(data[field])
         
         if not updates:
             return jsonify({'error': 'No valid fields to update'}), 400
         
         params.append(item_id)
-        query = f"UPDATE items SET {', '.join(updates)} WHERE id = %s"
+        # Safe: updates contains only pre-defined SQL fragments, params are parameterized
+        query = "UPDATE items SET " + ", ".join(updates) + " WHERE id = %s"
         
         cursor.execute(query, params)
         conn.commit()
