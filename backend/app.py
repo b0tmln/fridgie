@@ -20,9 +20,9 @@ logger = logging.getLogger(__name__)
 DB_CONFIG = {
     'host': os.getenv('DATABASE_HOST', 'db'),
     'port': int(os.getenv('DATABASE_PORT', 3306)),
-    'user': os.getenv('DATABASE_USER', 'fridgie_user'),
-    'passwd': os.getenv('DATABASE_PASSWORD', 'fridgie_password'),
-    'db': os.getenv('DATABASE_NAME', 'fridgie')
+    'user': os.getenv('DATABASE_USER', 'pantrie_user'),
+    'passwd': os.getenv('DATABASE_PASSWORD', 'pantrie_password'),
+    'db': os.getenv('DATABASE_NAME', 'pantrie')
 }
 
 def get_db_connection():
@@ -45,7 +45,7 @@ def get_db_connection():
 def index():
     """Root endpoint."""
     return jsonify({
-        'message': 'Welcome to Fridgie API',
+        'message': 'Welcome to Pantrie API',
         'version': '1.0.0',
         'endpoints': {
             '/': 'This help message',

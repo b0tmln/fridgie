@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fridgie - Docker Starter App",
+  title: "Pantrie - Docker Starter App",
   description: "A Docker-based starter app with Python backend, MySQL database, and Next.js frontend",
 };
 

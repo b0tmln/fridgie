@@ -1,4 +1,4 @@
-# 🧊 Fridgie - Docker Starter Repository
+# 🧊 Pantrie - Docker Starter Repository
 
 A complete Docker-based starter repository featuring:
 - **Python/Flask Backend** - RESTful API with full CRUD operations
@@ -15,7 +15,7 @@ A complete Docker-based starter repository featuring:
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd fridgie
+   cd pantrie
    ```
 
 2. **Set up environment variables**
@@ -38,7 +38,7 @@ A complete Docker-based starter repository featuring:
 ## 🏗️ Project Structure
 
 ```
-fridgie/
+pantrie/
 ├── backend/              # Python/Flask backend
 │   ├── Dockerfile       # Backend container configuration
 │   ├── app.py           # Main Flask application
@@ -107,7 +107,7 @@ docker-compose logs -f db
 ## 🗄️ Database
 
 The MySQL database is automatically initialized with a sample schema and data:
-- Database name: `fridgie`
+- Database name: `pantrie`
 - Table: `items` (id, name, quantity, created_at, updated_at)
 - Sample data: 5 food items
 

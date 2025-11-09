@@ -4,20 +4,20 @@ services:
   # MySQL Database
   db:
     image: mysql:8.0
-    container_name: fridgie-db
+    container_name: pantrie-db
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-fridgie}
-      MYSQL_USER: ${MYSQL_USER:-fridgie_user}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-fridgie_password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-pantrie}
+      MYSQL_USER: ${MYSQL_USER:-pantrie_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-pantrie_password}
     ports:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
       - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - fridgie-network
+      - pantrie-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
       interval: 10s
@@ -29,16 +29,16 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: fridgie-backend
+    container_name: pantrie-backend
     restart: unless-stopped
     environment:
       - FLASK_APP=app.py
       - FLASK_ENV=development
       - DATABASE_HOST=db
       - DATABASE_PORT=3306
-      - DATABASE_NAME=${MYSQL_DATABASE:-fridgie}
-      - DATABASE_USER=${MYSQL_USER:-fridgie_user}
-      - DATABASE_PASSWORD=${MYSQL_PASSWORD:-fridgie_password}
+      - DATABASE_NAME=${MYSQL_DATABASE:-pantrie}
+      - DATABASE_USER=${MYSQL_USER:-pantrie_user}
+      - DATABASE_PASSWORD=${MYSQL_PASSWORD:-pantrie_password}
     ports:
       - "5000:5000"
     volumes:
@@ -47,14 +47,14 @@ services:
       db:
         condition: service_healthy
     networks:
-      - fridgie-network
+      - pantrie-network
 
   # Next.js Frontend
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: fridgie-frontend
+    container_name: pantrie-frontend
     restart: unless-stopped
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:5000
@@ -67,11 +67,11 @@ services:
     depends_on:
       - backend
     networks:
-      - fridgie-network
+      - pantrie-network
 
 volumes:
   mysql-data:
 
 networks:
-  fridgie-network:
+  pantrie-network:
     driver: bridge

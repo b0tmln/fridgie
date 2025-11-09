@@ -1,4 +1,4 @@
--- Initialize the fridgie database
+-- Initialize the pantrie database
 
 CREATE TABLE IF NOT EXISTS items (
     id INT AUTO_INCREMENT PRIMARY KEY,

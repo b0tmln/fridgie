@@ -109,7 +109,7 @@ export default function Home() {
       <div className="max-w-4xl mx-auto">
         <header className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            🧊 Fridgie
+            🧊 Pantrie
           </h1>
           <p className="text-gray-600 dark:text-gray-300">
             Docker Starter: Python Backend + MySQL + Next.js
